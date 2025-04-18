@@ -1,0 +1,3 @@
+timestamp,action,asset,price,amount,profit,order_type
+2025-04-01T10:00:00,Buy,solana,150.0,0.01,0.0,market
+2025-04-01T11:00:00,Sell,solana,155.0,0.01,0.05,market

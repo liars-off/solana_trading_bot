@@ -1,0 +1,143 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>{% extends "base.html" %}
+{% block title %}Trades{% endblock %}
+{% block content %}
+<h1>Trades</h1>
+<div class="card">
+    <h3>Filter</h3>
+    <form method="GET">
+        <div class="row">
+            <div class="col-md-3">
+                <label>Period:</label>
+                <select name="period" class="form-control">
+                    <option value="1h" {% if period == '1h' %}selected{% endif %}>1 Hour</option>
+                    <option value="1d" {% if period == '1d' %}selected{% endif %}>1 Day</option>
+                    <option value="1w" {% if period == '1w' %}selected{% endif %}>1 Week</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>Asset:</label>
+                <select name="asset" class="form-control">
+                    <option value="solana" {% if asset == 'solana' %}selected{% endif %}>Solana</option>
+                    <option value="bitcoin" {% if asset == 'bitcoin' %}selected{% endif %}>Bitcoin</option>
+                    <option value="ethereum" {% if asset == 'ethereum' %}selected{% endif %}>Ethereum</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-custom" style="margin-top: 32px;">Apply</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="card chart-container">
+    <h3>Price and Indicators Chart</h3>
+    <canvas id="priceChart"></canvas>
+    <script id="market-data" type="application/json">
+        {{ market_data | tojson }}
+    </script>
+</div>
+<div class="card">
+    <h3>Market Data</h3>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Asset</th>
+                <th>Price</th>
+                <th>Volume</th>
+                <th>RSI</th>
+                <th>MACD</th>
+                <th>BB Upper</th>
+                <th>BB Lower</th>
+                <th>VWAP</th>
+                <th>Stoch %K</th>
+                <th>Stoch %D</th>
+                <th>ATR</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in market_data %}
+            <tr>
+                <td>{{ data.timestamp }}</td>
+                <td>{{ data.asset }}</td>
+                <td>{{ data.price }}</td>
+                <td>{{ data.volume }}</td>
+                <td>{{ data.rsi }}</td>
+                <td>{{ data.macd }}</td>
+                <td>{{ data.bb_upper }}</td>
+                <td>{{ data.bb_lower }}</td>
+                <td>{{ data.vwap }}</td>
+                <td>{{ data.stoch_k }}</td>
+                <td>{{ data.stoch_d }}</td>
+                <td>{{ data.atr }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="card">
+    <h3>Trade History</h3>
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Action</th>
+                <th>Asset</th>
+                <th>Price</th>
+                <th>Amount</th>
+                <th>Order Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in trades %}
+            <tr>
+                <td>{{ trade.timestamp }}</td>
+                <td>{{ trade.action }}</td>
+                <td>{{ trade.asset }}</td>
+                <td>{{ trade.price }}</td>
+                <td>{{ trade.amount }}</td>
+                <td>{{ trade.order_type }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

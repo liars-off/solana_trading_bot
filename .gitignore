@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database
+*.db
+
+# Model files
+*.h5
+
+# Environment
+.env
+*.env
+
+# Logs
+*.log
+
+# Virtual environment
+venv/
+.env/
+env/
+
+# IDE
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
