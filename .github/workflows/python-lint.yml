@@ -1,0 +1,32 @@
+name: Python Linting with flake8
+
+on:
+  push:
+    branches:
+      - main  # Atur ini ke nama branch utama kamu (misalnya main atau master)
+  pull_request:
+    branches:
+      - main  # Pengecekan saat ada pull request ke branch utama
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest  # Kamu bisa menggunakan Ubuntu sebagai environment untuk menjalankan linting
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Mengambil kode dari repositori
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9  # Menentukan versi Python yang akan digunakan
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt  # Install dependensi dari requirements.txt
+        pip install flake8  # Instal flake8 jika belum ada
+
+    - name: Run flake8 linting
+      run: |
+        flake8 src/ tests/ --max-line-length=120 --exclude=src/static
