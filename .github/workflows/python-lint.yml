@@ -27,6 +27,14 @@ jobs:
         pip install -r requirements.txt  # Install dependensi dari requirements.txt
         pip install flake8  # Instal flake8 jika belum ada
 
+    - name: Verify flake8 installation
+      run: |
+        pip show flake8  # Memastikan flake8 terinstal dengan benar
+
+    - name: Check files and directories
+      run: |
+        ls -R  # Menampilkan seluruh direktori dan file dalam repositori
+
     - name: Run flake8 linting
       run: |
-        flake8 src/ tests/ --max-line-length=120 --exclude=src/static
+        flake8 src/ tests/ --max-line-length=120 --exclude=src/static  # Pengecekan kode dengan flake8
