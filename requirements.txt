@@ -3,7 +3,7 @@ flask-socketio==5.3.6
 flask-login==0.6.3
 requests==2.32.3
 pandas==2.2.2
-numpy==1.26.4
+numpy==1.26.4  # Sesuai dengan ketergantungan pada paket lain, sudah disesuaikan untuk menghindari konflik
 sqlalchemy==2.0.35
 python-telegram-bot==13.7
 python-dotenv==1.0.1
@@ -16,3 +16,15 @@ etherscan-python==2.1.0
 pysolana==0.2.2
 pycoingecko==3.1.0
 pytest==8.3.3
+thinc==8.3.6  # Ditambahkan untuk menyesuaikan ketergantungan dengan numpy 1.26.4
+torch==2.6.0+cu124  # Memperbarui versi torch untuk kompatibilitas dengan CUDA, jika perlu menggunakan GPU
+nvidia-cublas-cu12==12.4.5.8  # Versi yang kompatibel dengan CUDA untuk Torch
+nvidia-cuda-cupti-cu12==12.4.127  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cuda-nvrtc-cu12==12.4.127  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cuda-runtime-cu12==12.4.127  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cudnn-cu12==9.1.0.70  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cufft-cu12==11.2.1.3  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-curand-cu12==10.3.5.147  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cusolver-cu12==11.6.1.9  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-cusparse-cu12==12.3.1.170  # Untuk memastikan kompatibilitas dengan CUDA
+nvidia-nvjitlink-cu12==12.4.127  # Untuk memastikan kompatibilitas dengan CUDA
