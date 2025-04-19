@@ -24,22 +24,20 @@ jobs:
         pip install -r requirements.txt
         pip install flake8 pytest
 
-    # Verifikasi instalasi flake8 dan pytest
-    - name: Verify flake8 and pytest installation
+    - name: Verify flake8 installation
       run: |
         pip show flake8
-        pip show pytest
+        flake8 --version  # Memastikan flake8 terinstal
 
-    # Cek struktur direktori untuk memastikan ada src/ dan tests/
-    - name: Check directories structure
+    - name: Check directory structure
       run: |
-        ls -R  # Menampilkan seluruh struktur direktori
+        ls -R src/  # Memastikan src/ ada
+        ls -R tests/  # Memastikan tests/ ada
 
     - name: Lint with flake8
       run: |
-        echo "Checking flake8 version..."
-        flake8 --version  # Cek versi flake8 yang terinstal
-        flake8 src/ tests/ --max-line-length=120 --exclude=src/static
+        echo "Running flake8 with debug..."
+        flake8 --max-line-length=120 --exclude=src/static --verbose src/ tests/
 
     - name: Run tests
       env:
